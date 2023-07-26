@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Pocket Hanzi Dictionary",
+  "description": "A simple extension that makes learning Chinese characters easier.",
+  "version": "1.0",
+  "permissions": ["storage", "contextMenus"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lang/lang.json"],
+      "matches": [],
+      "extension_ids": []
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icon/icon.png",
+    "32": "icon/icon.png",
+    "48": "icon/icon.png",
+    "128": "icon/icon.png"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "eng": {
+    "title": "Pocket Hanzi Dictionary",
+    "description": "A simple extension that makes learning Chinese characters easier.",
+    "language": "Language",
+    "contextTitle": "Hanzi Lookup"
+  },
+  "vie": {
+    "title": "Từ điển Hán tự bỏ túi",
+    "description": "Giúp việc học Hán tự trở nên dễ dàng hơn.",
+    "language": "Ngôn ngữ",
+    "contextTitle": "Tra Hán tự"
+  }
+}
