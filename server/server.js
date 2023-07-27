@@ -47,7 +47,10 @@ const getDataforChar = async (word, lang) => {
     });
     const data = cheerio.load(axiosResponse.data);
     const info = data(".hvres-meaning").text();
-    if (info === "") return {};
+    if (info === "")
+      return {
+        error: lang === "vie" ? "Không tìm thấy kết quả!" : "No result found!",
+      };
     const amHanViet = info.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
     const tongNet = info.split("Tổng nét: ")[1].split("Bộ")[0];
     const amPinyin = keepLatinLikeCharactersWithSpaces(
@@ -88,9 +91,16 @@ const getDataforChar = async (word, lang) => {
       const meaningAll = data(".hvres-details").text();
       var meaning;
       if (meaningAll.includes("Từ điển")) {
-        meaning = meaningAll.split("Từ điển trích dẫn")[1].split("Từ điển")[0];
-
-        if (!meaning.includes("Giản thể của")) {
+        if (meaningAll.includes("phổ thông"))
+          meaning = meaningAll.split("Từ điển phổ thông")[1].split("Từ")[0];
+        if (meaningAll.includes("trích dẫn"))
+          meaning = meaningAll
+            .split("Từ điển trích dẫn")[1]
+            .split("Từ điển")[0];
+        if (
+          !meaning.includes("Giản thể của") &&
+          meaningAll.includes("trích dẫn")
+        ) {
           meaning = meaning
             .replace(/^\s+/gm, "")
             .replace("\n", "")
@@ -100,21 +110,20 @@ const getDataforChar = async (word, lang) => {
             meaning = meaningAll
               .split("Từ điển Trần Văn Chánh")[1]
               .split("Từ điển")[0];
-          } else {
+          } else if (meaningAll.includes("Thiều Chửu")) {
             meaning = meaningAll
               .split("Từ điển Thiều Chửu")[1]
               .split("Từ điển")[0];
           }
         }
-        console.log(meaning);
-        if (meaning[0].includes("1. ")) {
+        if (meaning[0].includes("1. ") && meaningAll.includes("trích dẫn")) {
           temp = [];
           meaning.forEach((sentence) => {
             const formattedSentence = `${sentence.replace(/\s+/g, " ").trim()}`;
             temp.push(formattedSentence);
           });
           meaning = temp.join("\n").split("\n");
-        } else {
+        } else if (meaning.includes("①")) {
           meaning = meaning.split("\n");
           meaning = meaning.map((line) => line.trim());
           meaning = meaning.map((line) => line.replace(/^[①-⑦]/, ""));
@@ -124,6 +133,8 @@ const getDataforChar = async (word, lang) => {
           meaning = meaning.map((line, index) => {
             return `${index + 1}. ${line}`;
           });
+        } else {
+          meaning = meaning.split("\n");
         }
       }
       const returnData = {
@@ -147,7 +158,12 @@ const getDataforChar = async (word, lang) => {
     }
   } catch (error) {
     console.log(error);
-    return {};
+    return {
+      error:
+        lang === "vie"
+          ? "Đã có lỗi xảy ra! Mong bạn thông cảm cho sự bất tiện này"
+          : "An error has occured! Please try again later!",
+    };
   }
 };
 

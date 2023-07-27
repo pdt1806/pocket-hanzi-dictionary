@@ -1,4 +1,30 @@
 chrome.runtime.onMessage.addListener((message) => {
+  if (message.error) {
+    const toast = document.createElement("div");
+    toast.id = "hanziBox";
+    toast.className = "toast";
+
+    const header = document.createElement("p");
+    header.textContent = message.title;
+
+    const error = document.createElement("p");
+    error.textContent = `${message.error}`;
+
+    toast.appendChild(header);
+    toast.appendChild(document.createElement("br"));
+    toast.appendChild(error);
+
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = "1";
+    }, 100);
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 300);
+    }, 2000);
+  }
   if (message.event === "char") charInfo(message);
 });
 
@@ -16,7 +42,7 @@ const charInfo = (message) => {
   const chuViet = document.createElement("div");
   chuViet.id = "chuViet";
 
-  const char = document.createElement("p");
+  const char = document.createElement("span");
   char.className = "char";
   char.textContent = message.word;
 
@@ -141,7 +167,7 @@ const charMeaning = (message) => {
     const chuViet = document.createElement("div");
     chuViet.id = "chuViet";
 
-    const char = document.createElement("p");
+    const char = document.createElement("span");
     char.className = "char";
     char.textContent = message.word;
 
@@ -154,7 +180,7 @@ const charMeaning = (message) => {
     const amHanViet = document.createElement("h3");
     amHanViet.textContent = `Âm Hán Việt: ${message.amHanViet}`;
 
-    const title = document.createElement("h4");
+    const title = document.createElement("p");
     title.textContent = `Ý nghĩa:`;
 
     for (var i = 0; i < message.meaning.length; i++) {

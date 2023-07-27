@@ -19,18 +19,18 @@
   overflow-y: auto;
 }
 
-#nhanDeDong {
+#hanziBox #nhanDeDong {
   cursor: pointer;
   color: red;
 }
 
-#nhanDeXemYNghia,
-#nhanDeXemThongTin {
+#hanziBox #nhanDeXemYNghia,
+#hanziBox #nhanDeXemThongTin {
   cursor: pointer;
   color: blue;
 }
 
-.char {
+#hanziBox .char {
   font-family: "Noto Serif TC", serif !important;
   font-size: 70px;
   padding: 0 !important;
@@ -39,17 +39,19 @@
   width: min-content !important;
 }
 
-h3 {
+#hanziBox h3 {
   font-weight: bold !important;
+  font-size: 25px !important;
 }
 
-p {
+#hanziBox p {
   margin: 5px 0 5px 0 !important;
   padding: 0 !important;
   line-height: 1.5 !important;
+  font-size: 16px !important;
 }
 
-#chuViet {
+#hanziBox #chuViet {
   display: flex;
   align-items: center;
 }
