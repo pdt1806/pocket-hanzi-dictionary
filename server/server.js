@@ -5,25 +5,38 @@ const express = require("express");
 const app = express();
 const port = 5000;
 
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "chrome-extension://ombebikgpmfpkmmoglfpbgefcomjmfob"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("API for Pocket Hanzi Dictionary.");
 });
 
-app.get("/char", async (req, res) => {
+app.post("/char", async (req, res) => {
   const data = req.body;
   const basic = await getDataforChar(data.word, data.lang);
-  //   const expand = getMeaningforChar(data.word, data.lang);
+  //   const expand = getinfoforChar(data.word, data.lang);
   res.send(basic);
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on http://localhost:${port}`);
+  console.clear();
+  console.log(
+    `API for Pocket Hanzi Dictionary listening on http://localhost:${port}`
+  );
 });
 
 const getDataforChar = async (word, lang) => {
-  if (lang === "vie") {
+  try {
     const axiosResponse = await axios.request({
       method: "GET",
       url: `https://hvdic.thivien.net/whv/${word}`,
@@ -33,41 +46,105 @@ const getDataforChar = async (word, lang) => {
       },
     });
     const data = cheerio.load(axiosResponse.data);
-    const meaning = data(".hvres-meaning").text();
-    const amHanViet = meaning.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
-    const tongNet = meaning.split("Tổng nét: ")[1].split("Bộ")[0];
-    const bo = meaning.split("Bộ: ")[1].split("Lục thư")[0];
-    const lucthu = meaning.split("Lục thư: ")[1].split("Nét")[0];
-    const thongDungCo = meaning
-      .split("Độ thông dụng trong Hán ngữ cổ: ")[1]
-      .split("Độ thông dụng trong tiếng Trung hiện đại: ")[0];
-    const thongDungHienDai = meaning
-      .split("Độ thông dụng trong tiếng Trung hiện đại: ")[1]
-      .split("Âm Pinyin")[0];
-    const amPinyin = meaning.split("Âm Pinyin: ")[1].split(" ")[0];
-    const amNom = meaning.split("Âm Nôm: ")[1].split("Âm Nhật")[0];
-    const amNhatOnyomi = meaning
-      .split("Âm Nhật (onyomi): ")[1]
-      .split("Âm Nhật (kunyomi")[0];
-    const amNhatKunyomi = meaning
-      .split("Âm Nhật (kunyomi): ")[1]
-      .split("Âm Hàn")[0];
-    const amHan = meaning.split("Âm Hàn: ")[1].split("Âm Quảng Đông")[0];
-    const amQuangDong = meaning.split("Âm Quảng Đông: ")[1].split("\n")[0];
-    const data1 = {
-      amHanViet: amHanViet,
-      tongNet: tongNet,
-      bo: bo,
-      lucthu: lucthu,
-      thongDungCo: thongDungCo,
-      thongDungHienDai: thongDungHienDai,
-      amPinyin: amPinyin,
-      amNom: amNom,
-      amNhatOnyomi: amNhatOnyomi,
-      amNhatKunyomi: amNhatKunyomi,
-      amHan: amHan,
-      amQuangDong: amQuangDong,
-    };
-    return data1;
+    const info = data(".hvres-meaning").text();
+    if (info === "") return {};
+    const amHanViet = info.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
+    const tongNet = info.split("Tổng nét: ")[1].split("Bộ")[0];
+    const amPinyin = keepLatinLikeCharactersWithSpaces(
+      info.includes("Âm Pinyin")
+        ? info.split("Âm Pinyin: ")[1].split("Âm")[0]
+        : ""
+    );
+    const amNhatOnyomi = info.includes("Âm Nhật (onyomi): ")
+      ? info.split("Âm Nhật (onyomi): ")[1].split("Âm")[0]
+      : "";
+    const amNhatKunyomi = info.includes("Âm Nhật (kunyomi): ")
+      ? info.split("Âm Nhật (kunyomi): ")[1].split("Âm")[0]
+      : "";
+    const amHan = info.includes("Âm Hàn")
+      ? info.split("Âm Hàn: ")[1].split("Âm")[0]
+      : "";
+    const amQuangDong = info.includes("Âm Quảng Đông")
+      ? info.split("Âm Quảng Đông: ")[1].split("\n")[0]
+      : "";
+    if (lang === "vie") {
+      const bo = info.includes("Lục thư")
+        ? info.split("Bộ: ")[1].split("Lục thư")[0]
+        : info.split("Bộ: ")[1].split(" ")[0];
+      const lucthu = info.includes("Lục thư")
+        ? info.split("Lục thư: ")[1].split("Nét")[0].split("Hình thái")[0]
+        : "";
+      const thongDungCo = info
+        .split("Độ thông dụng trong Hán ngữ cổ: ")[1]
+        .split("Độ thông dụng trong tiếng Trung hiện đại: ")[0];
+      const thongDungHienDai = info
+        .split("Độ thông dụng trong tiếng Trung hiện đại: ")[1]
+        .split("Âm Pinyin")[0];
+      const amNom = info.includes("Âm Nôm")
+        ? info.split("Âm Nôm: ")[1].split("Âm")[0]
+        : "";
+      const meaningAll = data(".hvres-details").text();
+      var meaning = meaningAll
+        .split("Từ điển trích dẫn")[1]
+        .split("Từ điển")[0];
+      if (!meaning.includes("Giản thể của")) {
+        meaning = meaning
+          .replace(/^\s+/gm, "")
+          .replace("\n", "")
+          .match(/\d+\..*?\.\s/g);
+      } else {
+        meaning = meaningAll
+          .split("Từ điển Trần Văn Chánh")[1]
+          .split("Từ điển")[0];
+      }
+      if (meaning[0].includes("1. ")) {
+        temp = [];
+        meaning.forEach((sentence) => {
+          const formattedSentence = `${sentence.replace(/\s+/g, " ").trim()}`;
+          temp.push(formattedSentence);
+        });
+        meaning = temp.join("\n").split("\n");
+      } else {
+        meaning = meaning.split("\n");
+        meaning = meaning.map((line) => line.trim());
+        meaning = meaning.map((line) => line.replace(/^[①-⑦]/, ""));
+
+        meaning = meaning.join("\n").split("\n");
+        meaning = meaning.filter((e) => e !== "");
+        meaning = meaning.map((line, index) => {
+          return `${index + 1}. ${line}`;
+        });
+      }
+      const returnData = {
+        event: "char",
+        word: word,
+        amHanViet: amHanViet,
+        tongNet: tongNet,
+        bo: bo,
+        lucthu: lucthu,
+        thongDungCo: thongDungCo,
+        thongDungHienDai: thongDungHienDai,
+        amPinyin: amPinyin,
+        amNom: amNom,
+        amNhatOnyomi: amNhatOnyomi,
+        amNhatKunyomi: amNhatKunyomi,
+        amHan: amHan,
+        amQuangDong: amQuangDong,
+        meaning: meaning,
+      };
+      return returnData;
+    }
+  } catch (error) {
+    console.log(error);
+    return {};
   }
 };
+
+function keepLatinLikeCharactersWithSpaces(inputString) {
+  const latinLikeRegex = /[\p{Script=Latin}\s,]/gu;
+  const latinLikeCharacters = inputString.match(latinLikeRegex);
+  const resultString = latinLikeCharacters
+    ? latinLikeCharacters.join("").replace(/\s/g, "").replace(/,/g, ", ")
+    : "";
+  return resultString;
+}

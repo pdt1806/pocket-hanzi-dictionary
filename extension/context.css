@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap");
+
+#hanziBox {
+  font-family: Tahoma, sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  z-index: 9999;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  transition: opacity 0.3s ease;
+}
+
+#nhanDeDong {
+  cursor: pointer;
+  color: red;
+}
+
+#nhanDeXemYNghia,
+#nhanDeXemThongTin {
+  cursor: pointer;
+  color: blue;
+}
+
+.char {
+  font-family: "Noto Serif TC", serif;
+  font-size: 70px;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  margin: 5px 0 5px 0;
+}
