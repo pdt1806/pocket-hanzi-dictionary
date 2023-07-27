@@ -35,6 +35,7 @@ chrome.contextMenus.onClicked.addListener(async function (word, tab) {
     data["title"] =
       lang === "vie" ? "Từ điển Hán tự bỏ túi" : "Pocket Hanzi Dictionary";
     chrome.tabs.sendMessage(tab.id, data);
+    console.log(data);
     return;
   }
 });

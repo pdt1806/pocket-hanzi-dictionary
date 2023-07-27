@@ -62,7 +62,9 @@ const getDataforChar = async (word, lang) => {
       ? info.split("Âm Nhật (kunyomi): ")[1].split("Âm")[0]
       : "";
     const amHan = info.includes("Âm Hàn")
-      ? info.split("Âm Hàn: ")[1].split("Âm")[0]
+      ? info.includes("Âm Quảng Đông")
+        ? info.split("Âm Hàn: ")[1].split("Âm")[0]
+        : info.split("Âm Hàn: ")[1].split("\n")[0]
       : "";
     const amQuangDong = info.includes("Âm Quảng Đông")
       ? info.split("Âm Quảng Đông: ")[1].split("\n")[0]
@@ -84,36 +86,45 @@ const getDataforChar = async (word, lang) => {
         ? info.split("Âm Nôm: ")[1].split("Âm")[0]
         : "";
       const meaningAll = data(".hvres-details").text();
-      var meaning = meaningAll
-        .split("Từ điển trích dẫn")[1]
-        .split("Từ điển")[0];
-      if (!meaning.includes("Giản thể của")) {
-        meaning = meaning
-          .replace(/^\s+/gm, "")
-          .replace("\n", "")
-          .match(/\d+\..*?\.\s/g);
-      } else {
-        meaning = meaningAll
-          .split("Từ điển Trần Văn Chánh")[1]
-          .split("Từ điển")[0];
-      }
-      if (meaning[0].includes("1. ")) {
-        temp = [];
-        meaning.forEach((sentence) => {
-          const formattedSentence = `${sentence.replace(/\s+/g, " ").trim()}`;
-          temp.push(formattedSentence);
-        });
-        meaning = temp.join("\n").split("\n");
-      } else {
-        meaning = meaning.split("\n");
-        meaning = meaning.map((line) => line.trim());
-        meaning = meaning.map((line) => line.replace(/^[①-⑦]/, ""));
+      var meaning;
+      if (meaningAll.includes("Từ điển")) {
+        meaning = meaningAll.split("Từ điển trích dẫn")[1].split("Từ điển")[0];
 
-        meaning = meaning.join("\n").split("\n");
-        meaning = meaning.filter((e) => e !== "");
-        meaning = meaning.map((line, index) => {
-          return `${index + 1}. ${line}`;
-        });
+        if (!meaning.includes("Giản thể của")) {
+          meaning = meaning
+            .replace(/^\s+/gm, "")
+            .replace("\n", "")
+            .match(/\d+\..*?“[^”]*”.*?\./g);
+        } else {
+          if (meaningAll.includes("Trần Văn Chánh")) {
+            meaning = meaningAll
+              .split("Từ điển Trần Văn Chánh")[1]
+              .split("Từ điển")[0];
+          } else {
+            meaning = meaningAll
+              .split("Từ điển Thiều Chửu")[1]
+              .split("Từ điển")[0];
+          }
+        }
+        console.log(meaning);
+        if (meaning[0].includes("1. ")) {
+          temp = [];
+          meaning.forEach((sentence) => {
+            const formattedSentence = `${sentence.replace(/\s+/g, " ").trim()}`;
+            temp.push(formattedSentence);
+          });
+          meaning = temp.join("\n").split("\n");
+        } else {
+          meaning = meaning.split("\n");
+          meaning = meaning.map((line) => line.trim());
+          meaning = meaning.map((line) => line.replace(/^[①-⑦]/, ""));
+
+          meaning = meaning.join("\n").split("\n");
+          meaning = meaning.filter((e) => e !== "");
+          meaning = meaning.map((line, index) => {
+            return `${index + 1}. ${line}`;
+          });
+        }
       }
       const returnData = {
         event: "char",
