@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap");
 
 #hanziBox {
-  font-family: Tahoma, sans-serif;
+  font-family: Tahoma, sans-serif !important;
   position: fixed;
   top: 0;
   left: 0;

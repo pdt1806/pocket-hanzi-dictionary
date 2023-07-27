@@ -1,7 +1,9 @@
 body {
+  font-family: Tahoma, sans-serif !important;
   width: 400px;
   word-wrap: break-word;
   padding: 0 5px 5px 10px;
+  overflow-y: auto;
 }
 
 .lang {
@@ -51,4 +53,9 @@ input {
 
 label {
   font-size: 15px;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
 }

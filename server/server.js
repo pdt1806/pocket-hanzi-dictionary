@@ -91,8 +91,7 @@ const getDataforChar = async (word, lang) => {
       const meaningAll = data(".hvres-details").text();
       var meaning;
       if (meaningAll.includes("Từ điển")) {
-        if (meaningAll.includes("phổ thông"))
-          meaning = meaningAll.split("Từ điển phổ thông")[1].split("Từ")[0];
+        meaning = "a";
         if (meaningAll.includes("trích dẫn"))
           meaning = meaningAll
             .split("Từ điển trích dẫn")[1]
@@ -106,7 +105,9 @@ const getDataforChar = async (word, lang) => {
             .replace("\n", "")
             .match(/\d+\..*?“[^”]*”.*?\./g);
         } else {
-          if (meaningAll.includes("Trần Văn Chánh")) {
+          if (meaningAll.includes("phổ thông")) {
+            meaning = meaningAll.split("Từ điển phổ thông")[1].split("Từ")[0];
+          } else if (meaningAll.includes("Trần Văn Chánh")) {
             meaning = meaningAll
               .split("Từ điển Trần Văn Chánh")[1]
               .split("Từ điển")[0];

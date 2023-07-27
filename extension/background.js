@@ -1,8 +1,10 @@
 var lang = "vie";
+var ctxMenuCreated = false;
+var langData;
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.event === "changeLang") {
-    chrome.contextMenus.remove("pocket-hanzi-dictionary");
+    if (ctxMenuCreated) chrome.contextMenus.remove("pocket-hanzi-dictionary");
     fetchLang();
   }
 });
@@ -17,12 +19,14 @@ const fetchLang = () => {
   fetch(chrome.runtime.getURL("lang/lang.json"))
     .then((response) => response.json())
     .then((json) => {
-      var langData = json;
+      langData = json;
+      if (ctxMenuCreated) chrome.contextMenus.remove("pocket-hanzi-dictionary");
       chrome.contextMenus.create({
         title: `${langData[lang]["contextTitle"]}: %s`,
         contexts: ["selection"],
         id: "pocket-hanzi-dictionary",
       });
+      ctxMenuCreated = true;
     });
 };
 
@@ -32,8 +36,7 @@ chrome.contextMenus.onClicked.addListener(async function (word, tab) {
   var data = await getword(word.selectionText.replace(" ", ""));
   if (!!data) {
     data["lang"] = lang;
-    data["title"] =
-      lang === "vie" ? "Từ điển Hán tự bỏ túi" : "Pocket Hanzi Dictionary";
+    data["title"] = langData[lang]["title"];
     chrome.tabs.sendMessage(tab.id, data);
     console.log(data);
     return;
