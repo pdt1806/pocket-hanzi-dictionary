@@ -1,5 +1,5 @@
 const fetchLang = () => {
-  var lang;
+  var lang = "vie";
 
   chrome.storage.local.get(["lang"], function (result) {
     lang = result.lang;
