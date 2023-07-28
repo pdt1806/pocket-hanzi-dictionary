@@ -1,3 +1,11 @@
+const popular = {
+  "rất thấp": "Very rare",
+  thấp: "Rare",
+  "trung bình": "Common",
+  cao: "Very common",
+  "rất cao": "Extremely common",
+};
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message.error) {
     const toast = document.createElement("div");
@@ -106,12 +114,22 @@ const charInfoVie = (message) => {
   nhanDeXemYNghia.id = "nhanDeXemYNghia";
   nhanDeXemYNghia.textContent = "Nhấn vào đây để xem ý nghĩa";
 
+  const audioContainer = document.createElement("div");
+  audioContainer.id = "audioContainer";
+
+  const audio = `
+  <audio controls="" name="media"><source src="https://translate.google.com/translate_tts?ie=UTF-8&tl=zh&client=tw-ob&q=${message.word}" type="audio/mpeg"></audio>
+`;
+
+  audioContainer.innerHTML = audio;
+
   toast.appendChild(header);
   toast.appendChild(document.createElement("br"));
   toast.appendChild(chuViet);
   toast.appendChild(document.createElement("br"));
   toast.appendChild(amPinyin);
   toast.appendChild(amHanViet);
+  toast.appendChild(audioContainer);
   toast.appendChild(document.createElement("br"));
   toast.appendChild(tongNet);
   toast.appendChild(bo);
@@ -138,6 +156,7 @@ const charInfoVie = (message) => {
   });
 
   writer.loopCharacterAnimation();
+
   setTimeout(() => {
     toast.style.opacity = "1";
   }, 100);
@@ -183,38 +202,49 @@ const charInfoEng = (message) => {
   chuViet.appendChild(stroke);
 
   const pinyin = document.createElement("h3");
-  pinyin.textContent = `Pinyin: ${message.pinyin}`;
+  pinyin.textContent = `Pinyin: ${message.amPinyin}`;
 
   const meaning = document.createElement("p");
   meaning.textContent = `Meaning: ${message.meaning}`;
 
   const tongNet = document.createElement("p");
-  tongNet.textContent = `Stroke: ${message.stroke}`;
+  tongNet.textContent = `Stroke: ${message.tongNet}`;
 
   const explanation = document.createElement("p");
   explanation.textContent = `Explanation: ${message.explanation}`;
 
   const thongDungCo = document.createElement("p");
-  thongDungCo.textContent = `Rate of Appearance in Old Chinese: ${message.popularityOld}`;
+  thongDungCo.textContent = `Rate of Appearance in Old Chinese: ${
+    popular[message.thongDungCo]
+  }`;
 
   const thongDungHienDai = document.createElement("p");
-  thongDungHienDai.textContent = `Rate of Appearance in Modern Chinese: ${message.popularityModern}`;
+  thongDungHienDai.textContent = `Rate of Appearance in Modern Chinese: ${
+    popular[message.thongDungHienDai]
+  }`;
 
   const amNhatOnyomi = document.createElement("p");
-  amNhatOnyomi.textContent = message.jpOnyomi
-    ? `Japanese (onyomi): ${message.jpOnyomi}`
+  amNhatOnyomi.textContent = message.amNhatOnyomi
+    ? `Japanese (onyomi): ${message.amNhatOnyomi}`
     : "";
 
   const amNhatKunyomi = document.createElement("p");
-  amNhatKunyomi.textContent = message.jpKunyomi
-    ? `Japanese (kunyomi): ${message.jpKunyomi}`
+  amNhatKunyomi.textContent = message.amNhatKunyomi
+    ? `Japanese (kunyomi): ${message.amNhatKunyomi}`
+    : "";
+
+  const amHanViet = document.createElement("p");
+  amHanViet.textContent = message.amHanViet
+    ? `Vietnamese: ${message.amHanViet}`
     : "";
 
   const amHan = document.createElement("p");
-  amHan.textContent = message.kr ? `Korean: ${message.kr}` : "";
+  amHan.textContent = message.amHan ? `Korean: ${message.amHan}` : "";
 
   const amQuangDong = document.createElement("p");
-  amQuangDong.textContent = message.can ? `Cantonese: ${message.can}` : "";
+  amQuangDong.textContent = message.amQuangDong
+    ? `Cantonese: ${message.amQuangDong}`
+    : "";
 
   const statisticsTitle = document.createElement("p");
   statisticsTitle.textContent = `Statistics:`;
@@ -228,6 +258,15 @@ const charInfoEng = (message) => {
   nhanDeDong.id = "nhanDeDong";
   nhanDeDong.textContent = "Click here to close";
 
+  const audioContainer = document.createElement("div");
+  audioContainer.id = "audioContainer";
+
+  const audio = `
+  <audio controls="" name="media"><source src="https://translate.google.com/translate_tts?ie=UTF-8&tl=zh&client=tw-ob&q=${message.word}" type="audio/mpeg"></audio>
+`;
+
+  audioContainer.innerHTML = audio;
+
   toast.appendChild(header);
   toast.appendChild(document.createElement("br"));
   toast.appendChild(chuViet);
@@ -235,6 +274,7 @@ const charInfoEng = (message) => {
   toast.appendChild(pinyin);
   toast.appendChild(meaning);
   toast.appendChild(explanation);
+  toast.appendChild(audioContainer);
   toast.appendChild(document.createElement("br"));
   toast.appendChild(tongNet);
   toast.appendChild(thongDungCo);
@@ -242,6 +282,7 @@ const charInfoEng = (message) => {
   toast.appendChild(document.createElement("br"));
   toast.appendChild(amNhatOnyomi);
   toast.appendChild(amNhatKunyomi);
+  toast.appendChild(amHanViet);
   toast.appendChild(amHan);
   toast.appendChild(amQuangDong);
   toast.appendChild(document.createElement("br"));
@@ -296,7 +337,10 @@ const charMeaningVie = (message) => {
     chuViet.appendChild(char);
     chuViet.appendChild(stroke);
 
-    const amHanViet = document.createElement("h3");
+    const amPinyin = document.createElement("h3");
+    amPinyin.textContent = `Âm Pinyin: ${message.amPinyin}`;
+
+    const amHanViet = document.createElement("p");
     amHanViet.textContent = `Âm Hán Việt: ${message.amHanViet}`;
 
     const title = document.createElement("p");
@@ -319,6 +363,7 @@ const charMeaningVie = (message) => {
     toast.appendChild(document.createElement("br"));
     toast.appendChild(chuViet);
     toast.appendChild(document.createElement("br"));
+    toast.appendChild(amPinyin);
     toast.appendChild(amHanViet);
     toast.appendChild(document.createElement("br"));
     toast.appendChild(title);

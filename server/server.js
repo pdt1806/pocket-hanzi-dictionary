@@ -77,8 +77,23 @@ const getDataforChar = async (word, lang) => {
     const amQuangDong = info.includes("Âm Quảng Đông")
       ? info.split("Âm Quảng Đông: ")[1].split("\n")[0]
       : "";
+    const amHanViet = info.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
+
+    var returnData = {
+      event: "char",
+      word: word,
+      amHanViet: amHanViet,
+      tongNet: tongNet,
+      thongDungCo: thongDungCo,
+      thongDungHienDai: thongDungHienDai,
+      amPinyin: amPinyin,
+      amNhatOnyomi: amNhatOnyomi,
+      amNhatKunyomi: amNhatKunyomi,
+      amHan: amHan,
+      amQuangDong: amQuangDong,
+    };
+
     if (lang === "vie") {
-      const amHanViet = info.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
       const bo = info.includes("Lục thư")
         ? info.split("Bộ: ")[1].split("Lục thư")[0]
         : info.split("Bộ: ")[1].split(" ")[0];
@@ -139,27 +154,15 @@ const getDataforChar = async (word, lang) => {
           meaning = meaning.split("\n");
         }
       }
-      const returnData = {
-        event: "char",
-        word: word,
-        amHanViet: amHanViet,
-        tongNet: tongNet,
-        bo: bo,
-        lucthu: lucthu,
-        thongDungCo: thongDungCo,
-        thongDungHienDai: thongDungHienDai,
-        amPinyin: amPinyin,
-        amNom: amNom,
-        amNhatOnyomi: amNhatOnyomi,
-        amNhatKunyomi: amNhatKunyomi,
-        amHan: amHan,
-        amQuangDong: amQuangDong,
-        meaning: meaning,
-      };
+
+      returnData["bo"] = bo;
+      returnData["lucthu"] = lucthu;
+      returnData["amNom"] = amNom;
+      returnData["meaning"] = meaning;
+
       return returnData;
     }
     if (lang === "eng") {
-      console.log("eng");
       const axiosResponseEng = await axios.request({
         method: "GET",
         url: `https://www.dong-chinese.com/wiki/${word}`,
@@ -212,22 +215,10 @@ const getDataforChar = async (word, lang) => {
           );
         }
       }
-      const returnData = {
-        event: "char",
-        word: word,
-        stroke: tongNet,
-        popularityOld: popular[thongDungCo],
-        popularityModern: popular[thongDungHienDai],
-        pinyin: amPinyin,
-        jpOnyomi: amNhatOnyomi,
-        jpKunyomi: amNhatKunyomi,
-        kr: amHan,
-        can: amQuangDong,
-        meaning: meaningEng,
-        explanation: explanation,
-        statistics: statistics,
-      };
-      console.log(returnData);
+      returnData["explanation"] = explanation;
+      returnData["meaning"] = meaningEng;
+      returnData["statistics"] = statistics;
+
       return returnData;
     }
   } catch (error) {
@@ -239,14 +230,6 @@ const getDataforChar = async (word, lang) => {
           : "An error has occured! Please try again later!",
     };
   }
-};
-
-const popular = {
-  "rất thấp": "Very rare",
-  thấp: "Rare",
-  "trung bình": "Common",
-  cao: "Very common",
-  "rất cao": "Extremely common",
 };
 
 function keepLatinLikeCharactersWithSpaces(inputString) {

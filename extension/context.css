@@ -56,3 +56,8 @@
   display: flex;
   align-items: center;
 }
+
+audio {
+  margin: 0;
+  padding: 0;
+}
