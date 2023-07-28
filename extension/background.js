@@ -1,4 +1,4 @@
-var lang = "vie";
+var lang;
 var ctxMenuCreated = false;
 var langData;
 
@@ -34,6 +34,7 @@ fetchLang();
 
 chrome.contextMenus.onClicked.addListener(async function (word, tab) {
   var data = await getword(word.selectionText.replace(" ", ""));
+  console.log(data);
   if (!!data) {
     data["lang"] = lang;
     data["title"] = langData[lang]["title"];

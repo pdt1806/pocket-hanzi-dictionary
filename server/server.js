@@ -51,13 +51,18 @@ const getDataforChar = async (word, lang) => {
       return {
         error: lang === "vie" ? "Không tìm thấy kết quả!" : "No result found!",
       };
-    const amHanViet = info.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
     const tongNet = info.split("Tổng nét: ")[1].split("Bộ")[0];
     const amPinyin = keepLatinLikeCharactersWithSpaces(
       info.includes("Âm Pinyin")
         ? info.split("Âm Pinyin: ")[1].split("Âm")[0]
         : ""
     );
+    const thongDungCo = info
+      .split("Độ thông dụng trong Hán ngữ cổ: ")[1]
+      .split("Độ thông dụng trong tiếng Trung hiện đại: ")[0];
+    const thongDungHienDai = info
+      .split("Độ thông dụng trong tiếng Trung hiện đại: ")[1]
+      .split("Âm Pinyin")[0];
     const amNhatOnyomi = info.includes("Âm Nhật (onyomi): ")
       ? info.split("Âm Nhật (onyomi): ")[1].split("Âm")[0]
       : "";
@@ -73,18 +78,14 @@ const getDataforChar = async (word, lang) => {
       ? info.split("Âm Quảng Đông: ")[1].split("\n")[0]
       : "";
     if (lang === "vie") {
+      const amHanViet = info.split("Âm Hán Việt: ")[1].split("Tổng nét")[0];
       const bo = info.includes("Lục thư")
         ? info.split("Bộ: ")[1].split("Lục thư")[0]
         : info.split("Bộ: ")[1].split(" ")[0];
       const lucthu = info.includes("Lục thư")
         ? info.split("Lục thư: ")[1].split("Nét")[0].split("Hình thái")[0]
         : "";
-      const thongDungCo = info
-        .split("Độ thông dụng trong Hán ngữ cổ: ")[1]
-        .split("Độ thông dụng trong tiếng Trung hiện đại: ")[0];
-      const thongDungHienDai = info
-        .split("Độ thông dụng trong tiếng Trung hiện đại: ")[1]
-        .split("Âm Pinyin")[0];
+
       const amNom = info.includes("Âm Nôm")
         ? info.split("Âm Nôm: ")[1].split("Âm")[0]
         : "";
@@ -157,6 +158,78 @@ const getDataforChar = async (word, lang) => {
       };
       return returnData;
     }
+    if (lang === "eng") {
+      console.log("eng");
+      const axiosResponseEng = await axios.request({
+        method: "GET",
+        url: `https://www.dong-chinese.com/wiki/${word}`,
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+        },
+      });
+      var dataEng = cheerio.load(axiosResponseEng.data);
+      if (dataEng("body").text().includes("Word not found"))
+        return {
+          error:
+            "The character you are looking for is not available in the database!",
+        };
+
+      if (
+        dataEng("body")
+          .text()
+          .includes(
+            "This information for this character has not been manually reviewed and may not be accurate."
+          )
+      )
+        return {
+          error:
+            "This information for this character has not been manually reviewed and may not be accurate, so we cannot provide you with the information you need!",
+        };
+      var explanation = dataEng(".MuiTypography-root.MuiTypography-body1")
+        .eq(12)
+        .text();
+      var meaningEng = dataEng(".MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12")
+        .first()
+        .text();
+      var statistics = [];
+      if (dataEng("body").text().includes("Historical pronunciation")) {
+        var mark;
+        for (var i = 0; i < 100; i++) {
+          if (
+            dataEng(".MuiTypography-root.MuiTypography-body1")
+              .eq(i)
+              .text()
+              .includes("HSK")
+          ) {
+            mark = i;
+            break;
+          }
+        }
+        for (var i = mark; i < mark + 4; i++) {
+          statistics.push(
+            dataEng(".MuiTypography-root.MuiTypography-body1").eq(i).text()
+          );
+        }
+      }
+      const returnData = {
+        event: "char",
+        word: word,
+        stroke: tongNet,
+        popularityOld: popular[thongDungCo],
+        popularityModern: popular[thongDungHienDai],
+        pinyin: amPinyin,
+        jpOnyomi: amNhatOnyomi,
+        jpKunyomi: amNhatKunyomi,
+        kr: amHan,
+        can: amQuangDong,
+        meaning: meaningEng,
+        explanation: explanation,
+        statistics: statistics,
+      };
+      console.log(returnData);
+      return returnData;
+    }
   } catch (error) {
     console.log(error);
     return {
@@ -166,6 +239,14 @@ const getDataforChar = async (word, lang) => {
           : "An error has occured! Please try again later!",
     };
   }
+};
+
+const popular = {
+  "rất thấp": "Very rare",
+  thấp: "Rare",
+  "trung bình": "Common",
+  cao: "Very common",
+  "rất cao": "Extremely common",
 };
 
 function keepLatinLikeCharactersWithSpaces(inputString) {

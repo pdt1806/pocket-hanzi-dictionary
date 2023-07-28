@@ -23,12 +23,14 @@ chrome.runtime.onMessage.addListener((message) => {
       setTimeout(() => {
         document.body.removeChild(toast);
       }, 300);
-    }, 2000);
+    }, 5000);
   }
-  if (message.event === "char") charInfo(message);
+  if (message.event === "char") {
+    message.lang === "vie" ? charInfoVie(message) : charInfoEng(message);
+  }
 });
 
-const charInfo = (message) => {
+const charInfoVie = (message) => {
   if (!!document.getElementById("hanziBox"))
     document.body.removeChild(document.getElementById("hanziBox"));
 
@@ -52,7 +54,7 @@ const charInfo = (message) => {
   chuViet.appendChild(char);
   chuViet.appendChild(stroke);
 
-  const amHanViet = document.createElement("h3");
+  const amHanViet = document.createElement("p");
   amHanViet.textContent = `Âm Hán Việt: ${message.amHanViet}`;
 
   const tongNet = document.createElement("p");
@@ -70,7 +72,7 @@ const charInfo = (message) => {
   const thongDungHienDai = document.createElement("p");
   thongDungHienDai.textContent = `Độ thông dụng trong tiếng Trung hiện đại: ${message.thongDungHienDai}`;
 
-  const amPinyin = document.createElement("p");
+  const amPinyin = document.createElement("h3");
   amPinyin.textContent = message.amPinyin
     ? `Âm Pinyin: ${message.amPinyin}`
     : "";
@@ -108,14 +110,15 @@ const charInfo = (message) => {
   toast.appendChild(document.createElement("br"));
   toast.appendChild(chuViet);
   toast.appendChild(document.createElement("br"));
+  toast.appendChild(amPinyin);
   toast.appendChild(amHanViet);
+  toast.appendChild(document.createElement("br"));
   toast.appendChild(tongNet);
   toast.appendChild(bo);
   toast.appendChild(lucthu);
   toast.appendChild(thongDungCo);
   toast.appendChild(thongDungHienDai);
   toast.appendChild(document.createElement("br"));
-  toast.appendChild(amPinyin);
   toast.appendChild(amNom);
   toast.appendChild(amNhatOnyomi);
   toast.appendChild(amNhatKunyomi);
@@ -143,7 +146,7 @@ const charInfo = (message) => {
       toast.style.opacity = "0";
       setTimeout(() => {
         document.body.removeChild(toast);
-        charMeaning(message);
+        charMeaningVie(message);
       }, 300);
     });
   }
@@ -155,7 +158,123 @@ const charInfo = (message) => {
   });
 };
 
-const charMeaning = (message) => {
+const charInfoEng = (message) => {
+  if (!!document.getElementById("hanziBox"))
+    document.body.removeChild(document.getElementById("hanziBox"));
+
+  const toast = document.createElement("div");
+  toast.id = "hanziBox";
+  toast.className = "toast";
+
+  const header = document.createElement("p");
+  header.textContent = message.title;
+
+  const chuViet = document.createElement("div");
+  chuViet.id = "chuViet";
+
+  const char = document.createElement("span");
+  char.className = "char";
+  char.textContent = message.word;
+
+  const stroke = document.createElement("div");
+  stroke.id = "stroke";
+
+  chuViet.appendChild(char);
+  chuViet.appendChild(stroke);
+
+  const pinyin = document.createElement("h3");
+  pinyin.textContent = `Pinyin: ${message.pinyin}`;
+
+  const meaning = document.createElement("p");
+  meaning.textContent = `Meaning: ${message.meaning}`;
+
+  const tongNet = document.createElement("p");
+  tongNet.textContent = `Stroke: ${message.stroke}`;
+
+  const explanation = document.createElement("p");
+  explanation.textContent = `Explanation: ${message.explanation}`;
+
+  const thongDungCo = document.createElement("p");
+  thongDungCo.textContent = `Rate of Appearance in Old Chinese: ${message.popularityOld}`;
+
+  const thongDungHienDai = document.createElement("p");
+  thongDungHienDai.textContent = `Rate of Appearance in Modern Chinese: ${message.popularityModern}`;
+
+  const amNhatOnyomi = document.createElement("p");
+  amNhatOnyomi.textContent = message.jpOnyomi
+    ? `Japanese (onyomi): ${message.jpOnyomi}`
+    : "";
+
+  const amNhatKunyomi = document.createElement("p");
+  amNhatKunyomi.textContent = message.jpKunyomi
+    ? `Japanese (kunyomi): ${message.jpKunyomi}`
+    : "";
+
+  const amHan = document.createElement("p");
+  amHan.textContent = message.kr ? `Korean: ${message.kr}` : "";
+
+  const amQuangDong = document.createElement("p");
+  amQuangDong.textContent = message.can ? `Cantonese: ${message.can}` : "";
+
+  const statisticsTitle = document.createElement("p");
+  statisticsTitle.textContent = `Statistics:`;
+
+  for (var i = 0; i < message.statistics.length; i++) {
+    this["statistics" + i] = document.createElement("p");
+    this["statistics" + i].textContent = message.statistics[i];
+  }
+
+  const nhanDeDong = document.createElement("p");
+  nhanDeDong.id = "nhanDeDong";
+  nhanDeDong.textContent = "Click here to close";
+
+  toast.appendChild(header);
+  toast.appendChild(document.createElement("br"));
+  toast.appendChild(chuViet);
+  toast.appendChild(document.createElement("br"));
+  toast.appendChild(pinyin);
+  toast.appendChild(meaning);
+  toast.appendChild(explanation);
+  toast.appendChild(document.createElement("br"));
+  toast.appendChild(tongNet);
+  toast.appendChild(thongDungCo);
+  toast.appendChild(thongDungHienDai);
+  toast.appendChild(document.createElement("br"));
+  toast.appendChild(amNhatOnyomi);
+  toast.appendChild(amNhatKunyomi);
+  toast.appendChild(amHan);
+  toast.appendChild(amQuangDong);
+  toast.appendChild(document.createElement("br"));
+  if (!!message.statistics) toast.appendChild(statisticsTitle);
+  for (var i = 0; i < message.statistics.length; i++) {
+    toast.appendChild(this["statistics" + i]);
+  }
+  toast.appendChild(document.createElement("br"));
+  toast.appendChild(nhanDeDong);
+
+  document.body.appendChild(toast);
+  var writer = HanziWriter.create("stroke", message.word, {
+    width: 100,
+    height: 100,
+    padding: 5,
+    strokeAnimationSpeed: 2,
+    delayBetweenLoops: 2000,
+  });
+
+  writer.loopCharacterAnimation();
+  setTimeout(() => {
+    toast.style.opacity = "1";
+  }, 100);
+
+  document.getElementById("nhanDeDong").addEventListener("click", () => {
+    toast.style.opacity = "0";
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 300);
+  });
+};
+
+const charMeaningVie = (message) => {
   if (!!message.meaning) {
     const toast = document.createElement("div");
     toast.id = "hanziBox";
@@ -229,7 +348,7 @@ const charMeaning = (message) => {
         toast.style.opacity = "0";
         setTimeout(() => {
           document.body.removeChild(toast);
-          charInfo(message);
+          charInfoVie(message);
         }, 300);
       });
     document.getElementById("nhanDeDong").addEventListener("click", () => {
