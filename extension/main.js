@@ -46,6 +46,9 @@ const charInfoVie = (message) => {
   toast.id = "hanziBox";
   toast.className = "toast";
 
+  const main = document.createElement("div");
+  main.id = "main";
+
   const header = document.createElement("p");
   header.textContent = message.title;
 
@@ -106,6 +109,8 @@ const charInfoVie = (message) => {
     ? `Âm Quảng Đông: ${message.amQuangDong}`
     : "";
 
+  const footer = document.createElement("footer");
+
   const nhanDeDong = document.createElement("p");
   nhanDeDong.id = "nhanDeDong";
   nhanDeDong.textContent = "Nhấn vào đây để đóng";
@@ -123,28 +128,32 @@ const charInfoVie = (message) => {
 
   audioContainer.innerHTML = audio;
 
-  toast.appendChild(header);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(chuViet);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(amPinyin);
-  toast.appendChild(amHanViet);
-  toast.appendChild(audioContainer);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(tongNet);
-  toast.appendChild(bo);
-  toast.appendChild(lucthu);
-  toast.appendChild(thongDungCo);
-  toast.appendChild(thongDungHienDai);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(amNom);
-  toast.appendChild(amNhatOnyomi);
-  toast.appendChild(amNhatKunyomi);
-  toast.appendChild(amHan);
-  toast.appendChild(amQuangDong);
-  toast.appendChild(document.createElement("br"));
-  if (!!message.meaning) toast.appendChild(nhanDeXemYNghia);
-  toast.appendChild(nhanDeDong);
+  main.appendChild(header);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(chuViet);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(amPinyin);
+  main.appendChild(amHanViet);
+  main.appendChild(audioContainer);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(tongNet);
+  main.appendChild(bo);
+  main.appendChild(lucthu);
+  main.appendChild(thongDungCo);
+  main.appendChild(thongDungHienDai);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(amNom);
+  main.appendChild(amNhatOnyomi);
+  main.appendChild(amNhatKunyomi);
+  main.appendChild(amHan);
+  main.appendChild(amQuangDong);
+  main.appendChild(document.createElement("br"));
+
+  if (!!message.meaning) footer.appendChild(nhanDeXemYNghia);
+  footer.appendChild(nhanDeDong);
+
+  toast.appendChild(main);
+  toast.appendChild(footer);
 
   document.body.appendChild(toast);
   var writer = HanziWriter.create("stroke", message.word, {
@@ -184,6 +193,9 @@ const charInfoEng = (message) => {
   const toast = document.createElement("div");
   toast.id = "hanziBox";
   toast.className = "toast";
+
+  const main = document.createElement("div");
+  main.id = "main";
 
   const header = document.createElement("p");
   header.textContent = message.title;
@@ -254,6 +266,8 @@ const charInfoEng = (message) => {
     this["statistics" + i].textContent = message.statistics[i];
   }
 
+  const footer = document.createElement("footer");
+
   const nhanDeDong = document.createElement("p");
   nhanDeDong.id = "nhanDeDong";
   nhanDeDong.textContent = "Click here to close";
@@ -267,31 +281,35 @@ const charInfoEng = (message) => {
 
   audioContainer.innerHTML = audio;
 
-  toast.appendChild(header);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(chuViet);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(pinyin);
-  toast.appendChild(meaning);
-  toast.appendChild(explanation);
-  toast.appendChild(audioContainer);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(tongNet);
-  toast.appendChild(thongDungCo);
-  toast.appendChild(thongDungHienDai);
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(amNhatOnyomi);
-  toast.appendChild(amNhatKunyomi);
-  toast.appendChild(amHanViet);
-  toast.appendChild(amHan);
-  toast.appendChild(amQuangDong);
-  toast.appendChild(document.createElement("br"));
-  if (!!message.statistics) toast.appendChild(statisticsTitle);
+  main.appendChild(header);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(chuViet);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(pinyin);
+  main.appendChild(meaning);
+  main.appendChild(explanation);
+  main.appendChild(audioContainer);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(tongNet);
+  main.appendChild(thongDungCo);
+  main.appendChild(thongDungHienDai);
+  main.appendChild(document.createElement("br"));
+  main.appendChild(amNhatOnyomi);
+  main.appendChild(amNhatKunyomi);
+  main.appendChild(amHanViet);
+  main.appendChild(amHan);
+  main.appendChild(amQuangDong);
+  main.appendChild(document.createElement("br"));
+  if (!!message.statistics) main.appendChild(statisticsTitle);
   for (var i = 0; i < message.statistics.length; i++) {
-    toast.appendChild(this["statistics" + i]);
+    main.appendChild(this["statistics" + i]);
   }
-  toast.appendChild(document.createElement("br"));
-  toast.appendChild(nhanDeDong);
+  main.appendChild(document.createElement("br"));
+  footer.appendChild(nhanDeDong);
+  footer.style.justifyContent = "flex-end";
+
+  toast.appendChild(main);
+  toast.appendChild(footer);
 
   document.body.appendChild(toast);
   var writer = HanziWriter.create("stroke", message.word, {
@@ -320,6 +338,9 @@ const charMeaningVie = (message) => {
     const toast = document.createElement("div");
     toast.id = "hanziBox";
     toast.className = "toast";
+
+    const main = document.createElement("div");
+    main.id = "main";
 
     const header = document.createElement("p");
     header.textContent = message.title;
@@ -351,6 +372,8 @@ const charMeaningVie = (message) => {
       this["meaning" + i].textContent = message.meaning[i];
     }
 
+    const footer = document.createElement("footer");
+
     const nhanDeDong = document.createElement("p");
     nhanDeDong.id = "nhanDeDong";
     nhanDeDong.textContent = "Nhấn vào đây để đóng";
@@ -359,20 +382,25 @@ const charMeaningVie = (message) => {
     nhanDeXemThongTin.id = "nhanDeXemThongTin";
     nhanDeXemThongTin.textContent = "Nhấn vào đây để xem thông tin";
 
-    toast.appendChild(header);
-    toast.appendChild(document.createElement("br"));
-    toast.appendChild(chuViet);
-    toast.appendChild(document.createElement("br"));
-    toast.appendChild(amPinyin);
-    toast.appendChild(amHanViet);
-    toast.appendChild(document.createElement("br"));
-    toast.appendChild(title);
+    main.appendChild(header);
+    main.appendChild(document.createElement("br"));
+    main.appendChild(chuViet);
+    main.appendChild(document.createElement("br"));
+    main.appendChild(amPinyin);
+    main.appendChild(amHanViet);
+    main.appendChild(document.createElement("br"));
+    main.appendChild(title);
     for (var i = 0; i < message.meaning.length; i++) {
-      toast.appendChild(this["meaning" + i]);
+      main.appendChild(this["meaning" + i]);
     }
-    toast.appendChild(document.createElement("br"));
-    toast.appendChild(nhanDeXemThongTin);
-    toast.appendChild(nhanDeDong);
+    main.appendChild(document.createElement("br"));
+
+    footer.appendChild(nhanDeXemThongTin);
+    footer.appendChild(nhanDeDong);
+    footer.style.justifyContent = "space-between";
+
+    toast.appendChild(main);
+    toast.appendChild(footer);
 
     document.body.appendChild(toast);
     var writer = HanziWriter.create("stroke", message.word, {

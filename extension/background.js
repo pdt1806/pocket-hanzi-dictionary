@@ -4,7 +4,10 @@ var langData;
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.event === "changeLang") {
-    if (ctxMenuCreated) chrome.contextMenus.remove("pocket-hanzi-dictionary");
+    if (ctxMenuCreated) {
+      chrome.contextMenus.remove("pocket-hanzi-dictionary");
+      ctxMenuCreated = false;
+    }
     fetchLang();
   }
 });
@@ -20,7 +23,10 @@ const fetchLang = () => {
     .then((response) => response.json())
     .then((json) => {
       langData = json;
-      if (ctxMenuCreated) chrome.contextMenus.remove("pocket-hanzi-dictionary");
+      if (ctxMenuCreated) {
+        chrome.contextMenus.remove("pocket-hanzi-dictionary");
+        ctxMenuCreated = false;
+      }
       chrome.contextMenus.create({
         title: `${langData[lang]["contextTitle"]}: %s`,
         contexts: ["selection"],
