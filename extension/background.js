@@ -1,4 +1,4 @@
-var lang = "vie";
+var lang = "eng";
 var ctxMenuCreated = false;
 var langData;
 

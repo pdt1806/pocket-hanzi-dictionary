@@ -1,10 +1,10 @@
 const fetchLang = () => {
-  var lang = "vie";
+  var lang;
 
   chrome.storage.local.get(["lang"], function (result) {
     lang = result.lang;
     if (!lang) {
-      const langToStore = "vie";
+      const langToStore = "eng";
       lang = langToStore;
       chrome.storage.local.set({ lang: langToStore }, () => {});
     }
