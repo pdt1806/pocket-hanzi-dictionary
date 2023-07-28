@@ -214,12 +214,12 @@ const charInfoEng = (message) => {
   explanation.textContent = `Explanation: ${message.explanation}`;
 
   const thongDungCo = document.createElement("p");
-  thongDungCo.textContent = `Rate of Appearance in Old Chinese: ${
+  thongDungCo.textContent = `Occurrence rate in Old Chinese: ${
     popular[message.thongDungCo]
   }`;
 
   const thongDungHienDai = document.createElement("p");
-  thongDungHienDai.textContent = `Rate of Appearance in Modern Chinese: ${
+  thongDungHienDai.textContent = `Occurrence rate in Modern Chinese: ${
     popular[message.thongDungHienDai]
   }`;
 
