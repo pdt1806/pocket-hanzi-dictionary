@@ -15,13 +15,13 @@
   z-index: 9999;
   opacity: 0;
   transition: opacity 0.3s ease;
-  max-width: 40vw !important;
+  max-width: 30vw !important;
   max-height: 80vh !important;
   min-height: min-content !important;
 }
 
 #hanziBox #main {
-  max-height: 76vh !important;
+  max-height: 74vh !important;
   padding-right: 10px !important;
   overflow-y: auto;
 }
@@ -30,6 +30,7 @@
   cursor: pointer;
   color: red !important;
   max-width: max-content !important;
+  margin-left: 20px !important;
 }
 
 #hanziBox #nhanDeXemYNghia,
@@ -71,16 +72,6 @@
 }
 
 #hanziBox footer {
-  width: 100%;
   display: flex;
-  align-items: start;
   margin-top: 5px;
-}
-
-#hanziBox #nhanDeDong {
-  margin-left: 20px !important;
-}
-
-#hanziBox footer .eng {
-  margin-left: auto;
 }

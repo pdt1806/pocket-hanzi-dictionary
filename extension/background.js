@@ -27,12 +27,14 @@ const fetchLang = () => {
         chrome.contextMenus.remove("pocket-hanzi-dictionary");
         ctxMenuCreated = false;
       }
-      chrome.contextMenus.create({
-        title: `${langData[lang]["contextTitle"]}: %s`,
-        contexts: ["selection"],
-        id: "pocket-hanzi-dictionary",
-      });
-      ctxMenuCreated = true;
+      if (!ctxMenuCreated) {
+        chrome.contextMenus.create({
+          title: `${langData[lang]["contextTitle"]}: %s`,
+          contexts: ["selection"],
+          id: "pocket-hanzi-dictionary",
+        });
+        ctxMenuCreated = true;
+      }
     });
 };
 
