@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("API for Pocket Hanzi Dictionary.");
+  res.send("Server for Pocket Hanzi Dictionary.");
 });
 
 app.post("/char", async (req, res) => {
@@ -31,7 +31,7 @@ app.post("/char", async (req, res) => {
 app.listen(port, () => {
   console.clear();
   console.log(
-    `API for Pocket Hanzi Dictionary listening on http://localhost:${port}`
+    `Server for Pocket Hanzi Dictionary listening on http://localhost:${port}`
   );
 });
 

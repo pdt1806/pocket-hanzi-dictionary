@@ -60,3 +60,15 @@ a {
   color: blue;
   text-decoration: none;
 }
+
+footer {
+  margin: 10px 0 0 0;
+  padding: 0;
+  align-items: center;
+}
+
+footer p {
+  margin: 0;
+  padding: 0;
+}
+
