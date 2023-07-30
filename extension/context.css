@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap");
-
 #hanziBox {
   font-family: Tahoma, sans-serif !important;
   position: fixed;
@@ -16,12 +14,12 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   max-width: 30vw !important;
-  max-height: 80vh !important;
+  max-height: 75vh !important;
   min-height: min-content !important;
 }
 
 #hanziBox #main {
-  max-height: 74vh !important;
+  max-height: 68vh !important;
   padding-right: 10px !important;
   overflow-y: auto;
 }
@@ -30,7 +28,6 @@
   cursor: pointer;
   color: red !important;
   max-width: max-content !important;
-  margin-left: 20px !important;
 }
 
 #hanziBox #nhanDeXemYNghia,
@@ -38,10 +35,10 @@
   cursor: pointer;
   color: blue !important;
   max-width: max-content !important;
+  margin-right: 20px !important;
 }
 
 #hanziBox .char {
-  font-family: "Noto Serif TC", serif !important;
   font-size: 70px;
   padding: 0 !important;
   margin: 0 10px 0 0 !important;
@@ -72,6 +69,7 @@
 }
 
 #hanziBox footer {
+  width: 100%;
   display: flex;
   margin-top: 5px;
 }

@@ -118,8 +118,7 @@ const getDataforChar = async (word, lang) => {
         ) {
           meaning = meaning
             .replace(/^\s+/gm, "")
-            .replace("\n", "")
-            .match(/\d+\..*?“[^”]*”.*?\./g);
+            .match(/\b\d+\.\s(?!\d+\.\s)[\s\S]*?(?=\n\d+\.\s|\n\n|$)/g);
         } else {
           if (meaningAll.includes("phổ thông")) {
             meaning = meaningAll.split("Từ điển phổ thông")[1].split("Từ")[0];
@@ -159,7 +158,6 @@ const getDataforChar = async (word, lang) => {
       returnData["lucthu"] = lucthu;
       returnData["amNom"] = amNom;
       returnData["meaning"] = meaning;
-
       return returnData;
     }
     if (lang === "eng") {

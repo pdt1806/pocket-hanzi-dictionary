@@ -13,6 +13,7 @@ chrome.runtime.onMessage.addListener((message) => {
     toast.className = "toast";
 
     const header = document.createElement("p");
+    header.style.fontWeight = "bold";
     header.textContent = message.title;
 
     const error = document.createElement("p");
@@ -50,6 +51,7 @@ const charInfoVie = (message) => {
   main.id = "main";
 
   const header = document.createElement("p");
+  header.style.fontWeight = "bold";
   header.textContent = message.title;
 
   const chuViet = document.createElement("div");
@@ -151,7 +153,9 @@ const charInfoVie = (message) => {
 
   if (!!message.meaning) footer.appendChild(nhanDeXemYNghia);
   footer.appendChild(nhanDeDong);
-  footer.style.justifyContent = "space-between";
+  footer.style.justifyContent = !!message.meaning
+    ? "space-between"
+    : "flex-end";
 
   toast.appendChild(main);
   toast.appendChild(footer);
@@ -199,12 +203,13 @@ const charInfoEng = (message) => {
   main.id = "main";
 
   const header = document.createElement("p");
+  header.style.fontWeight = "bold";
   header.textContent = message.title;
 
   const chuViet = document.createElement("div");
   chuViet.id = "chuViet";
 
-  const char = document.createElement("span");
+  const char = document.createElement("div");
   char.className = "char";
   char.textContent = message.word;
 
@@ -260,6 +265,7 @@ const charInfoEng = (message) => {
     : "";
 
   const statisticsTitle = document.createElement("p");
+  statisticsTitle.style.fontWeight = "bold";
   statisticsTitle.textContent = `Statistics:`;
 
   for (var i = 0; i < message.statistics.length; i++) {
@@ -344,6 +350,7 @@ const charMeaningVie = (message) => {
     main.id = "main";
 
     const header = document.createElement("p");
+    header.style.fontWeight = "bold";
     header.textContent = message.title;
 
     const chuViet = document.createElement("div");
