@@ -8,9 +8,9 @@ const popular = {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.error) {
-    const toast = document.createElement("div");
-    toast.id = "hanziBox";
-    toast.className = "toast";
+    const pocketHanziDictToast = document.createElement("div");
+    pocketHanziDictToast.id = "pocketHanziDictBox";
+    pocketHanziDictToast.className = "pocketHanziDictToast";
 
     const header = document.createElement("p");
     header.style.fontWeight = "bold";
@@ -19,18 +19,18 @@ chrome.runtime.onMessage.addListener((message) => {
     const error = document.createElement("p");
     error.textContent = `${message.error}`;
 
-    toast.appendChild(header);
-    toast.appendChild(document.createElement("br"));
-    toast.appendChild(error);
+    pocketHanziDictToast.appendChild(header);
+    pocketHanziDictToast.appendChild(document.createElement("br"));
+    pocketHanziDictToast.appendChild(error);
 
-    document.body.appendChild(toast);
+    document.body.appendChild(pocketHanziDictToast);
     setTimeout(() => {
-      toast.style.opacity = "1";
+      pocketHanziDictToast.style.opacity = "1";
     }, 100);
     setTimeout(() => {
-      toast.style.opacity = "0";
+      pocketHanziDictToast.style.opacity = "0";
       setTimeout(() => {
-        document.body.removeChild(toast);
+        document.body.removeChild(pocketHanziDictToast);
       }, 300);
     }, 5000);
   }
@@ -40,12 +40,12 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 const charInfoVie = (message) => {
-  if (!!document.getElementById("hanziBox"))
-    document.body.removeChild(document.getElementById("hanziBox"));
+  if (!!document.getElementById("pocketHanziDictBox"))
+    document.body.removeChild(document.getElementById("pocketHanziDictBox"));
 
-  const toast = document.createElement("div");
-  toast.id = "hanziBox";
-  toast.className = "toast";
+  const pocketHanziDictToast = document.createElement("div");
+  pocketHanziDictToast.id = "pocketHanziDictBox";
+  pocketHanziDictToast.className = "pocketHanziDictToast";
 
   const main = document.createElement("div");
   main.id = "main";
@@ -157,10 +157,10 @@ const charInfoVie = (message) => {
     ? "space-between"
     : "flex-end";
 
-  toast.appendChild(main);
-  toast.appendChild(footer);
+  pocketHanziDictToast.appendChild(main);
+  pocketHanziDictToast.appendChild(footer);
 
-  document.body.appendChild(toast);
+  document.body.appendChild(pocketHanziDictToast);
   var writer = HanziWriter.create("stroke", message.word, {
     width: 100,
     height: 100,
@@ -172,32 +172,32 @@ const charInfoVie = (message) => {
   writer.loopCharacterAnimation();
 
   setTimeout(() => {
-    toast.style.opacity = "1";
+    pocketHanziDictToast.style.opacity = "1";
   }, 100);
   if (!!message.meaning) {
     document.getElementById("nhanDeXemYNghia").addEventListener("click", () => {
-      toast.style.opacity = "0";
+      pocketHanziDictToast.style.opacity = "0";
       setTimeout(() => {
-        document.body.removeChild(toast);
+        document.body.removeChild(pocketHanziDictToast);
         charMeaningVie(message);
       }, 300);
     });
   }
   document.getElementById("nhanDeDong").addEventListener("click", () => {
-    toast.style.opacity = "0";
+    pocketHanziDictToast.style.opacity = "0";
     setTimeout(() => {
-      document.body.removeChild(toast);
+      document.body.removeChild(pocketHanziDictToast);
     }, 300);
   });
 };
 
 const charInfoEng = (message) => {
-  if (!!document.getElementById("hanziBox"))
-    document.body.removeChild(document.getElementById("hanziBox"));
+  if (!!document.getElementById("pocketHanziDictBox"))
+    document.body.removeChild(document.getElementById("pocketHanziDictBox"));
 
-  const toast = document.createElement("div");
-  toast.id = "hanziBox";
-  toast.className = "toast";
+  const pocketHanziDictToast = document.createElement("div");
+  pocketHanziDictToast.id = "pocketHanziDictBox";
+  pocketHanziDictToast.className = "pocketHanziDictToast";
 
   const main = document.createElement("div");
   main.id = "main";
@@ -315,10 +315,10 @@ const charInfoEng = (message) => {
   footer.appendChild(nhanDeDong);
   footer.style.justifyContent = "flex-end";
 
-  toast.appendChild(main);
-  toast.appendChild(footer);
+  pocketHanziDictToast.appendChild(main);
+  pocketHanziDictToast.appendChild(footer);
 
-  document.body.appendChild(toast);
+  document.body.appendChild(pocketHanziDictToast);
   var writer = HanziWriter.create("stroke", message.word, {
     width: 100,
     height: 100,
@@ -329,22 +329,22 @@ const charInfoEng = (message) => {
 
   writer.loopCharacterAnimation();
   setTimeout(() => {
-    toast.style.opacity = "1";
+    pocketHanziDictToast.style.opacity = "1";
   }, 100);
 
   document.getElementById("nhanDeDong").addEventListener("click", () => {
-    toast.style.opacity = "0";
+    pocketHanziDictToast.style.opacity = "0";
     setTimeout(() => {
-      document.body.removeChild(toast);
+      document.body.removeChild(pocketHanziDictToast);
     }, 300);
   });
 };
 
 const charMeaningVie = (message) => {
   if (!!message.meaning) {
-    const toast = document.createElement("div");
-    toast.id = "hanziBox";
-    toast.className = "toast";
+    const pocketHanziDictToast = document.createElement("div");
+    pocketHanziDictToast.id = "pocketHanziDictBox";
+    pocketHanziDictToast.className = "pocketHanziDictToast";
 
     const main = document.createElement("div");
     main.id = "main";
@@ -407,10 +407,10 @@ const charMeaningVie = (message) => {
     footer.appendChild(nhanDeDong);
     footer.style.justifyContent = "space-between";
 
-    toast.appendChild(main);
-    toast.appendChild(footer);
+    pocketHanziDictToast.appendChild(main);
+    pocketHanziDictToast.appendChild(footer);
 
-    document.body.appendChild(toast);
+    document.body.appendChild(pocketHanziDictToast);
     var writer = HanziWriter.create("stroke", message.word, {
       width: 100,
       height: 100,
@@ -421,21 +421,21 @@ const charMeaningVie = (message) => {
 
     writer.loopCharacterAnimation();
     setTimeout(() => {
-      toast.style.opacity = "1";
+      pocketHanziDictToast.style.opacity = "1";
     }, 100);
     document
       .getElementById("nhanDeXemThongTin")
       .addEventListener("click", () => {
-        toast.style.opacity = "0";
+        pocketHanziDictToast.style.opacity = "0";
         setTimeout(() => {
-          document.body.removeChild(toast);
+          document.body.removeChild(pocketHanziDictToast);
           charInfoVie(message);
         }, 300);
       });
     document.getElementById("nhanDeDong").addEventListener("click", () => {
-      toast.style.opacity = "0";
+      pocketHanziDictToast.style.opacity = "0";
       setTimeout(() => {
-        document.body.removeChild(toast);
+        document.body.removeChild(pocketHanziDictToast);
       }, 300);
     });
   }
