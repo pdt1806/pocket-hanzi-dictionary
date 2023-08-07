@@ -9,7 +9,7 @@
   border-radius: 10px;
   background-color: white;
   border: 1px solid black;
-  color: black;
+  color: black !important;
   z-index: 9999;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -48,6 +48,7 @@
 }
 
 #pocketHanziDictBox h3 {
+  color: black !important;
   font-weight: bold !important;
   font-size: 25px !important;
 }
