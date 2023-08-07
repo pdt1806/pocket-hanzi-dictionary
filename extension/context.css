@@ -16,6 +16,7 @@
   max-width: 30vw !important;
   max-height: 75vh !important;
   min-height: min-content !important;
+  color: black;
 }
 
 #pocketHanziDictBox #main {
