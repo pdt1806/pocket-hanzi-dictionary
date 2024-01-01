@@ -63,7 +63,7 @@ const characterLookUp = async (word) => {
     lang: lang,
   };
   try {
-    const response = await fetch("http://hanzi.bennynguyen.us/char", {
+    const response = await fetch("https://hanzi.bennynguyen.dev/char", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
